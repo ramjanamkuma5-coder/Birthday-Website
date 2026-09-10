@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0c0a09">
+  <title>Happy Birthday, Putul Kushwaha ✨</title>
+
+  <!-- Required CDNs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Elegant serif + clean sans fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0c0a09;
+      --pink: #ff4f91;
+      --red: #ff2d55;
+      --white: #fff7fb;
+      --muted: #d7ced4;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; min-height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      font-family: "DM Sans", system-ui, sans-serif;
+    }
+
+    /* ================= AURORA ================= */
+    #aurora {
+      position: fixed;
+      inset: -20%;
+      z-index: -5;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 25%, hsla(333,70%,55%,.30), transparent 32%),
+        radial-gradient(circle at 75% 20%, hsla(282,82%,54%,.22), transparent 31%),
+        radial-gradient(circle at 30% 80%, hsla(210,89%,60%,.20), transparent 33%),
+        radial-gradient(circle at 80% 75%, hsla(35,90%,60%,.18), transparent 30%),
+        #0c0a09;
+      filter: blur(42px) saturate(120%);
+      animation: aurora 15s ease-in-out infinite alternate;
+      transform-origin: center;
+    }
+
+    @keyframes aurora {
+      0% { transform: translate3d(-3%, 2%, 0) scale(1); }
+      35% { transform: translate3d(4%, -3%, 0) scale(1.08); }
+      70% { transform: translate3d(-2%, 5%, 0) scale(1.03); }
+      100% { transform: translate3d(5%, 1%, 0) scale(1.12); }
+    }
+
+    #grain {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: .075;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+
+    #three-bg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      pointer-events: none;
+    }
+
+    /* ================= PROGRESS ================= */
+    #progressTrack {
+      position: fixed;
+      z-index: 50;
+      top: max(16px, env(safe-area-inset-top));
+      left: 50%;
+      width: min(430px, 72vw);
+      height: 5px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 999px;
+      background: rgba(255,255,255,.075);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(255, 55, 125, .08);
+    }
+
+    #progressBar {
+      height: 100%;
+      width: 20%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ff4f91, #ff2d55, #ff668f);
+      box-shadow: 0 0 18px rgba(255,45,85,.65);
+      transition: width .7s cubic-bezier(.22,1,.36,1);
+    }
+
+    /* ================= LAYOUT ================= */
+    main {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 72px 18px 34px;
+    }
+
+    .step {
+      width: min(100%, 980px);
+      display: none;
+      opacity: 0;
+      transform: translateY(35px) scale(.97);
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .glass {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(28px, 6vw, 62px);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 30px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+        rgba(8, 6, 8, .64);
+      box-shadow:
+        0 30px 100px rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter: blur(24px) saturate(130%);
+      -webkit-backdrop-filter: blur(24px) saturate(130%);
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      left: -180px;
+      top: -200px;
+      background: radial-gradient(circle, rgba(255,79,145,.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    .glass::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      right: -180px;
+      bottom: -190px;
+      background: radial-gradient(circle, rgba(139,92,246,.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .center {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: rgba(255,255,255,.57);
+      font-size: .74rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1, h2 {
+      margin: 0;
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: -.035em;
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, #fff, #ffd4e5 42%, #ff6e9e 75%, #fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 200% auto;
+      animation: titleShimmer 6s ease-in-out infinite;
+    }
+
+    @keyframes titleShimmer {
+      0%,100% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+    }
+
+    .bodycopy {
+      max-width: 680px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      line-height: 1.8;
+    }
+
+    .icon {
+      display: inline-block;
+      font-size: clamp(4rem, 10vw, 7rem);
+      line-height: 1;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 0 24px rgba(255, 70, 125, .45));
+      animation: iconFloat 3.3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+      0%,100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+
+    .step-1 .icon {
+      animation: heartbeat 1.65s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 18px rgba(255, 55, 115,.42)); }
+      12% { transform: scale(1.13); filter: drop-shadow(0 0 38px rgba(255, 55, 115,.78)); }
+      24% { transform: scale(1); }
+      36% { transform: scale(1.08); }
+      48% { transform: scale(1); }
+    }
+
+    /* ================= BUTTONS ================= */
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-width: 165px;
+      margin-top: 30px;
+      padding: 14px 25px;
+      border-radius: 999px;
+      color: white;
+      font: 700 .94rem/1 "DM Sans", sans-serif;
+      background: linear-gradient(100deg, #ff4f91, #ff2d55 70%, #ff4b78);
+      box-shadow:
+        0 12px 32px rgba(255,45,85,.27),
+        0 0 28px rgba(255,65,130,.16);
+      transition: transform .25s ease, box-shadow .25s ease, filter .25s ease, opacity .3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow:
+        0 16px 40px rgba(255,45,85,.36),
+        0 0 42px rgba(255,65,130,.30);
+      filter: brightness(1.08);
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(.97);
+    }
+
+    .btn:disabled {
+      cursor: default;
+    }
+
+    /* ================= BENTO ================= */
+    .bento {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.35fr .85fr;
+      gap: 14px;
+      max-width: 820px;
+      margin: 32px auto 0;
+    }
+
+    .bento-card {
+      min-height: 190px;
+      padding: 25px;
+      border-radius: 23px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      transition: transform .3s ease, border-color .3s ease, background .3s ease;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255,120,165,.32);
+      background: linear-gradient(145deg, rgba(255,105,155,.12), rgba(255,255,255,.035));
+    }
+
+    .bento-card.large {
+      grid-column: span 2;
+      min-height: 170px;
+    }
+
+    .bento-card h3 {
+      margin: 0;
+      color: #fff;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.25rem, 3vw, 1.65rem);
+    }
+
+    .bento-card p {
+      margin: 12px 0 0;
+      color: #c9c0c6;
+      line-height: 1.65;
+    }
+
+    /* ================= POLAROID ================= */
+    .memory-layout {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(250px, 430px) 1fr;
+      align-items: center;
+      gap: clamp(30px, 6vw, 70px);
+      max-width: 850px;
+      margin: 38px auto 0;
+    }
+
+    .polaroid-wrap {
+      perspective: 900px;
+      display: grid;
+      place-items: center;
+    }
+
+    .polaroid {
+      width: min(100%, 390px);
+      padding: 13px 13px 16px;
+      background: #fff;
+      color: #1d171a;
+      box-shadow: 0 25px 60px rgba(0,0,0,.55);
+      transform: rotate(-3.5deg);
+      transition: transform .18s ease;
+      will-change: transform;
+    }
+
+    .polaroid img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      background: #eee;
+    }
+
+    .caption {
+      padding-top: 13px;
+      font-family: "Playfair Display", Georgia, serif;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .memory-copy {
+      text-align: left;
+    }
+
+    .memory-copy .bodycopy {
+      margin-top: 0;
+    }
+
+    /* ================= FINALE ================= */
+    #finalMessage {
+      margin: 32px 0 0;
+      opacity: 0;
+      transform: translateY(22px);
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.7rem, 5vw, 3.2rem);
+      line-height: 1.15;
+      background: linear-gradient(120deg, #fff, #ff9fc1, #fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    #flash {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #celebrateBtn.done {
+      pointer-events: none;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 700px) {
+      main {
+        padding: 64px 12px 24px;
+      }
+
+      .glass {
+        padding: 30px 20px;
+        border-radius: 24px;
+      }
+
+      .bento {
+        grid-template-columns: 1fr;
+      }
+
+      .bento-card,
+      .bento-card.large {
+        grid-column: span 1;
+        min-height: auto;
+      }
+
+      .memory-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .memory-copy {
+        text-align: center;
+      }
+
+      .memory-copy .bodycopy {
+        margin-left: auto;
+      }
+
+      .polaroid {
+        width: min(92vw, 350px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="aurora"></div>
+  <div id="grain"></div>
+  <canvas id="three-bg" aria-hidden="true"></canvas>
+
+  <div id="progressTrack" aria-label="Birthday journey progress">
+    <div id="progressBar"></div>
+  </div>
+
+  <main>
+    <!-- STEP 1 -->
+    <section class="step step-1 active" data-step="1">
+      <div class="glass center">
+        <span class="icon">❤️</span>
+        <div class="eyebrow">A little world, made for you</div>
+        <h1 class="gradient-text" style="font-size:clamp(2.7rem,7vw,5.5rem)">Hey Putul Kushwaha✨,</h1>
+        <p class="bodycopy">
+          I built a little world for you, just to bring a smile to your face on your special day.
+        </p>
+        <button class="btn next">Let's Begin <span>→</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step" data-step="2">
+      <div class="glass center">
+        <span class="icon">🎉</span>
+        <div class="eyebrow">Today is all about you</div>
+        <h2 class="gradient-text" style="font-size:clamp(2.7rem,7vw,5rem)">Happy Birthday!</h2>
+        <p class="bodycopy">
+          Another year of you making the world brighter. Your existence is a gift,
+          and I'm so lucky to witness it.
+        </p>
+        <button class="btn next">There's more... <span>→</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" data-step="3">
+      <div class="glass">
+        <div class="center">
+          <div class="eyebrow">Just a few reasons</div>
+          <h2 class="gradient-text" style="font-size:clamp(2.1rem,5vw,4rem)">
+            A Few Things I Adore About You
+          </h2>
+        </div>
+
+        <div class="bento">
+          <article class="bento-card large">
+            <h3>✨ Your Unmatched Kindness</h3>
+            <p>The genuine warmth you show to everyone is something truly rare and beautiful.</p>
+          </article>
+
+          <article class="bento-card">
+            <h3>😊 That Smile</h3>
+            <p>It's a work of art.</p>
+          </article>
+
+          <article class="bento-card large">
+            <h3>🌟 Your Radiant Spirit</h3>
+            <p>
+              Your passion for life is infectious. Being around you makes everything
+              feel more exciting and possible.
+            </p>
+          </article>
+        </div>
+
+        <div class="center">
+          <button class="btn next">Remember this? <span>→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step" data-step="4">
+      <div class="glass">
+        <div class="center">
+          <div class="eyebrow">A little trip down memory lane</div>
+          <h2 class="gradient-text" style="font-size:clamp(2.2rem,6vw,4.4rem)">That One Time...</h2>
+        </div>
+
+        <div class="memory-layout">
+          <div class="polaroid-wrap" id="polaroidWrap">
+            <div class="polaroid" id="polaroid">
+              <img
+                id="memoryImage"
+                alt="Our favorite memory"
+                src="https://drive.google.com/uc?export=view&id=1k9qTDPm9SiEup32J7NhpZRMtwLT45m39">
+              <div class="caption">Our favorite memory.</div>
+            </div>
+          </div>
+
+          <div class="memory-copy">
+            <p class="bodycopy">
+              Every moment with you feels like a scene from a movie I'd watch on repeat.
+            </p>
+            <button class="btn next">One last thing... <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step" data-step="5">
+      <div class="glass center">
+        <span class="icon">🎂</span>
+        <div class="eyebrow">From my heart to yours</div>
+        <h2 class="gradient-text" style="font-size:clamp(2.2rem,6vw,4.5rem)">My Wish For You</h2>
+
+        <p class="bodycopy">
+          May the next year bring you all the love, success, and pure happiness
+          you so rightfully deserve. May your dreams soar higher than ever.
+        </p>
+
+        <div id="finalMessage">Happy Birthday, My dear sister❤️.</div>
+        <button id="celebrateBtn" class="btn">Celebrate! 🎊</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="flash"></div>
+
+  <script>
+    /* =========================================================
+       THREE.JS — 3D FLOATING HEARTS
+       ========================================================= */
+    const canvas = document.getElementById("three-bg");
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true
+    });
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    if ("outputEncoding" in renderer) renderer.outputEncoding = THREE.sRGBEncoding;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      55,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+    camera.position.z = 18;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+
+    const keyLight = new THREE.PointLight(0xff6b9c, 2.2, 35);
+    keyLight.position.set(5, 7, 12);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.PointLight(0x9f7cff, 1.4, 30);
+    fillLight.position.set(-8, -5, 8);
+    scene.add(fillLight);
+
+    // Parametric 3D heart shape
+    function createHeartGeometry() {
+      const shape = new THREE.Shape();
+      shape.moveTo(0, 0.35);
+      shape.bezierCurveTo(-1.15, 1.15, -2.15, 0.15, -1.05, -0.75);
+      shape.bezierCurveTo(-0.45, -1.25, 0, -0.65, 0, -0.65);
+      shape.bezierCurveTo(0, -0.65, 0.45, -1.25, 1.05, -0.75);
+      shape.bezierCurveTo(2.15, 0.15, 1.15, 1.15, 0, 0.35);
+
+      const geo = new THREE.ExtrudeGeometry(shape, {
+        depth: 0.38,
+        bevelEnabled: true,
+        bevelSegments: 3,
+        steps: 2,
+        bevelSize: 0.12,
+        bevelThickness: 0.12,
+        curveSegments: 16
+      });
+
+      geo.center();
+      geo.scale(0.85, 0.85, 0.85);
+      return geo;
+    }
+
+    const heartGeo = createHeartGeometry();
+    const heartMaterials = [
+      new THREE.MeshStandardMaterial({
+        color: 0xff3f78,
+        roughness: 0.24,
+        metalness: 0.15,
+        transparent: true,
+        opacity: 0.78
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0xff668f,
+        roughness: 0.22,
+        metalness: 0.12,
+        transparent: true,
+        opacity: 0.7
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0xd92d67,
+        roughness: 0.3,
+        metalness: 0.18,
+        transparent: true,
+        opacity: 0.75
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0xff8fb2,
+        roughness: 0.26,
+        metalness: 0.1,
+        transparent: true,
+        opacity: 0.62
+      })
+    ];
+
+    const hearts = [];
+    const heartCount = 23;
+
+    for (let i = 0; i < heartCount; i++) {
+      const h = new THREE.Mesh(
+        heartGeo,
+        heartMaterials[i % heartMaterials.length].clone()
+      );
+
+      const s = 0.25 + Math.random() * 0.75;
+      h.scale.setScalar(s);
+
+      h.position.set(
+        (Math.random() - 0.5) * 22,
+        (Math.random() - 0.5) * 15,
+        (Math.random() - 0.5) * 13
+      );
+
+      h.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI
+      );
+
+      h.userData = {
+        baseX: h.position.x,
+        baseY: h.position.y,
+        baseZ: h.position.z,
+        speed: 0.25 + Math.random() * 0.55,
+        phase: Math.random() * Math.PI * 2,
+        drift: 0.25 + Math.random() * 0.5
+      };
+
+      scene.add(h);
+      hearts.push(h);
+    }
+
+    let sceneTime = 0;
+    let finaleStarted = false;
+
+    function animateThree() {
+      requestAnimationFrame(animateThree);
+
+      sceneTime += 0.008;
+
+      hearts.forEach((h, i) => {
+        if (finaleStarted) return;
+
+        const u = h.userData;
+        h.position.x = u.baseX + Math.sin(sceneTime * u.speed + u.phase) * u.drift;
+        h.position.y = u.baseY + Math.sin(sceneTime * u.speed * 0.8 + u.phase) * 0.5;
+        h.rotation.x += 0.0015 * u.speed;
+        h.rotation.y += 0.0022 * u.speed;
+        h.rotation.z += 0.001 * u.speed;
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    animateThree();
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    });
+
+    /* =========================================================
+       STEP NAVIGATION — GSAP TRANSITIONS
+       ========================================================= */
+    const steps = [...document.querySelectorAll(".step")];
+    const progressBar = document.getElementById("progressBar");
+    let currentStep = 1;
+    let isTransitioning = false;
+
+    function animateStepContents(stepEl) {
+      const targets = stepEl.querySelectorAll(".eyebrow, h1, h2, .bodycopy, .icon, .bento-card, .polaroid-wrap, .memory-copy, .btn, #finalMessage");
+      gsap.fromTo(
+        targets,
+        { opacity: 0, y: 22 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          stagger: 0.055,
+          ease: "power3.out",
+          delay: 0.12
+        }
+      );
+    }
+
+    function showStep(nextStep) {
+      if (isTransitioning || nextStep < 1 || nextStep > 5) return;
+      if (nextStep === currentStep) return;
+
+      isTransitioning = true;
+
+      const current = steps[currentStep - 1];
+      const next = steps[nextStep - 1];
+
+      gsap.to(current, {
+        opacity: 0,
+        y: -28,
+        scale: 0.965,
+        duration: 0.42,
+        ease: "power2.in",
+        onComplete: () => {
+          current.classList.remove("active");
+          next.classList.add("active");
+
+          gsap.set(next, { opacity: 0, y: 38, scale: 0.97 });
+
+          gsap.to(next, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            ease: "power3.out",
+            onComplete: () => {
+              isTransitioning = false;
+              animateStepContents(next);
+            }
+          });
+        }
+      });
+
+      currentStep = nextStep;
+      progressBar.style.width = `${nextStep * 20}%`;
+    }
+
+    // Initial entrance
+    const first = steps[0];
+    gsap.set(first, { opacity: 0, y: 35, scale: 0.97 });
+    gsap.to(first, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.85,
+      ease: "power3.out",
+      onComplete: () => animateStepContents(first)
+    });
+
+    document.querySelectorAll(".next").forEach(btn => {
+      btn.addEventListener("click", () => {
+        gsap.fromTo(
+          btn,
+          { scale: 1 },
+          { scale: 0.95, duration: 0.08, yoyo: true, repeat: 1 }
+        );
+        showStep(currentStep + 1);
+      });
+    });
+
+    /* =========================================================
+       POLAROID — CURSOR PARALLAX
+       ========================================================= */
+    const wrap = document.getElementById("polaroidWrap");
+    const polaroid = document.getElementById("polaroid");
+
+    wrap.addEventListener("pointermove", (e) => {
+      const r = wrap.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+
+      gsap.to(polaroid, {
+        rotationY: x * 12,
+        rotationX: -y * 10,
+        rotationZ: -3.5 + x * 3,
+        duration: 0.35,
+        ease: "power2.out"
+      });
+    });
+
+    wrap.addEventListener("pointerleave", () => {
+      gsap.to(polaroid, {
+        rotationY: 0,
+        rotationX: 0,
+        rotationZ: -3.5,
+        duration: 0.55,
+        ease: "elastic.out(1, .45)"
+      });
+    });
+
+    /* =========================================================
+       GOOGLE DRIVE IMAGE FALLBACKS
+       ========================================================= */
+    const memoryImage = document.getElementById("memoryImage");
+    memoryImage.addEventListener("error", function () {
+      this.src = "https://drive.google.com/thumbnail?id=1k9qTDPm9SiEup32J7NhpZRMtwLT45m39&sz=w1200";
+    });
+
+    /* =========================================================
+       FINALE — CONFETTI + EMOJI SHOWER + HEART SWIRL
+       ========================================================= */
+    const celebrate = document.getElementById("celebrateBtn");
+    const finalMessage = document.getElementById("finalMessage");
+    let celebrated = false;
+
+    function emojiBurst() {
+      const end = Date.now() + 5000;
+      const emojis = ["❤️", "💖", "✨"];
+
+      function frame() {
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+        const shape = confetti.shapeFromText({
+          text: emoji,
+          fontFamily: "Arial"
+        });
+
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 45,
+          startVelocity: 55,
+          origin: { x: 0, y: .96 },
+          shapes: [shape],
+          scalar: .95,
+          ticks: 210
+        });
+
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 45,
+          startVelocity: 55,
+          origin: { x: 1, y: .96 },
+          shapes: [shape],
+          scalar: .95,
+          ticks: 210
+        });
+
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }
+
+      frame();
+    }
+
+    function colorfulShower() {
+      const end = Date.now() + 5000;
+
+      function frame() {
+        confetti({
+          particleCount: 5,
+          angle: 90,
+          spread: 115,
+          startVelocity: 22,
+          gravity: .65,
+          ticks: 180,
+          origin: { x: Math.random(), y: -.04 }
+        });
+
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }
+
+      frame();
+    }
+
+    celebrate.addEventListener("click", () => {
+      if (celebrated) return;
+      celebrated = true;
+      finaleStarted = true;
+      celebrate.disabled = true;
+      celebrate.classList.add("done");
+
+      // Button disappears
+      gsap.to(celebrate, {
+        opacity: 0,
+        scale: .82,
+        duration: .38,
+        ease: "power2.in"
+      });
+
+      // Final message appears
+      gsap.to(finalMessage, {
+        opacity: 1,
+        y: 0,
+        duration: 1.15,
+        delay: .25,
+        ease: "power3.out"
+      });
+
+      // Screen flash
+      const flash = document.getElementById("flash");
+      gsap.to(flash, {
+        opacity: .16,
+        duration: .12,
+        yoyo: true,
+        repeat: 1
+      });
+
+      // Strong corner explosions
+      setTimeout(() => {
+        confetti({
+          particleCount: 190,
+          angle: 65,
+          spread: 72,
+          startVelocity: 68,
+          origin: { x: 0, y: 1 },
+          scalar: 1.05
+        });
+
+        confetti({
+          particleCount: 190,
+          angle: 115,
+          spread: 72,
+          startVelocity: 68,
+          origin: { x: 1, y: 1 },
+          scalar: 1.05
+        });
+      }, 250);
+
+      setTimeout(emojiBurst, 550);
+      setTimeout(colorfulShower, 700);
+
+      // Swirl every 3D heart outward and upward
+      hearts.forEach((h, i) => {
+        const angle = (i / hearts.length) * Math.PI * 2;
+        const radius = 12 + Math.random() * 11;
+
+        gsap.to(h.position, {
+          x: Math.cos(angle) * radius,
+          y: 10 + Math.random() * 9,
+          z: h.position.z - 4,
+          duration: 3.4 + Math.random() * 1.25,
+          delay: i * .025,
+          ease: "power2.inOut"
+        });
+
+        gsap.to(h.rotation, {
+          x: h.rotation.x + Math.PI * 2 * (1 + Math.random()),
+          y: h.rotation.y + Math.PI * 2 * (1 + Math.random()),
+          z: h.rotation.z + Math.PI * 2,
+          duration: 3.8 + Math.random() * .7,
+          delay: i * .02,
+          ease: "power2.inOut"
+        });
+
+        gsap.to(h.material, {
+          opacity: 0,
+          duration: 1.7,
+          delay: 2 + i * .025,
+          ease: "power2.out"
+        });
+      });
+
+      // A final soft heart-shaped confetti pulse
+      setTimeout(() => {
+        const shape = confetti.shapeFromText({ text: "❤️", fontFamily: "Arial" });
+        confetti({
+          particleCount: 70,
+          spread: 90,
+          startVelocity: 35,
+          gravity: .55,
+          shapes: [shape],
+          scalar: .8,
+          origin: { x: .5, y: .55 }
+        });
+      }, 1800);
+    });
+  </script>
+</body>
+</html>
